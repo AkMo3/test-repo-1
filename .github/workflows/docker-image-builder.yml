@@ -9,7 +9,6 @@ on:
 
 env:
   PR_NUMBER: ${{ github.event.number }}
-  LABELS: ${{ github.event.pull_request.labels }}
       
 jobs:
   triage:
@@ -22,18 +21,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    
-    - name: Fetch Label of PR
-      id: label-the-PR
-      run: |
-        echo $LABELS
-        echo $PR_NUMBER
-        CURL_RES=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/labels")
-        echo $CURL_RES
-        PR_LABELS=$(echo $CURL_RES | jq -r '.[].name' | tr '\n' ',')
-        echo "::set-output name=pr-labels::$PR_LABELS"
-
     - id: create-sushi-image
-      if: contains(steps.label-the-PR.outputs.pr-labels, 'sushi')
+      if: contains(github.event.pull_request.labels.*.name, 'sushi')
       run: |
         echo "sushi found"
