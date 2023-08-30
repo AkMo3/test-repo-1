@@ -1,0 +1,31 @@
+name: Create Docker Image
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  triage:
+    if: github.event.pull_request.merged == true
+    permissions:
+      contents: read
+      pull-requests: read
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    
+    - name: Fetch Label of PR
+      id: label-the-PR
+      run: |
+        PR_LABELS=$(jq -r '.pull_request.labels[].name' "${{ github.eventPath }}" | tr '\n' ',')
+        echo "::set-output name=pr-labels::$PR_LABELS"
+
+    - id: create-sushi-image
+      if: contains(steps.label-the-PR.outputs.pr-labels, 'sushi')
+      run: |
+        echo "sushi found"
