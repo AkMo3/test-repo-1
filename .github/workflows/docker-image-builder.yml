@@ -26,7 +26,7 @@ jobs:
       id: label-the-PR
       run: |
         echo $PR_NUMBER
-        CURL_RES=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/labels")
+        CURL_RES=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/labels")
         echo $CURL_RES
         PR_LABELS=$(echo $CURL_RES | jq -r '.[].name' | tr '\n' ',')
         echo "::set-output name=pr-labels::$PR_LABELS"
