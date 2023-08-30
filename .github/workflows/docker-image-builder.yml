@@ -9,7 +9,7 @@ on:
 
 env:
   PR_NUMBER: ${{ github.event.number }}
-  LABELS: ${{ github.context.payload.pull_request.labels }}
+  LABELS: ${{ github.event.pull_request.labels }}
       
 jobs:
   triage:
