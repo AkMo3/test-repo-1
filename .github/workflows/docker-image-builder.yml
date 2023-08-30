@@ -22,6 +22,7 @@ jobs:
     - name: Fetch Label of PR
       id: label-the-PR
       run: |
+        PR_NUMBER=$(jq -r ".workflow_run.conclusion_context" <<< "${{ github.event.workflow_run.payload }}")
         PR_LABELS=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER/labels" | jq -r '.[].name' | tr '\n' ',')
         echo "::set-output name=pr-labels::$PR_LABELS"
 
