@@ -9,6 +9,7 @@ on:
 
 env:
   PR_NUMBER: ${{ github.event.number }}
+  LABELS: ${{ github.context.payload.pull_request.labels }}
       
 jobs:
   triage:
@@ -25,6 +26,7 @@ jobs:
     - name: Fetch Label of PR
       id: label-the-PR
       run: |
+        echo $LABELS
         echo $PR_NUMBER
         CURL_RES=$(curl -s -H "Authorization: Bearer ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/issues/$PR_NUMBER/labels")
         echo $CURL_RES
